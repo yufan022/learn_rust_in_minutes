@@ -1,6 +1,6 @@
-/*
+use std::ops::Add;
 
-*/
+mod rc;
 
 // 这是注释，单行注释...
 /* ...这是多行注释 */
@@ -14,6 +14,23 @@
 fn add2(x: i32, y: i32) -> i32 {
     // 隐式返回 (不要分号)
     x + y
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+struct Point3 {
+    x: i32,
+    y: i32,
+}
+
+impl Add for Point3 {
+    type Output = Point3;
+
+    fn add(self, other: Point3) -> Point3 {
+        Point3 {
+            x: self.x + other.x,
+            y: self.y + other.y,
+        }
+    }
 }
 
 // 主函数(Main function)
@@ -36,6 +53,12 @@ fn main() {
 
     // 算术运算
     let sum = x + y + 13;
+
+    // 重载
+    assert_eq!(
+        Point3 { x: 1, y: 0 } + Point3 { x: 2, y: 3 },
+        Point3 { x: 3, y: 3 }
+    );
 
     // 可变变量
     let mut mutable = 1;
@@ -276,4 +299,13 @@ fn main() {
 
     println!("{}", *ref_var2); // 6
                                // var2 = 2; // 编译报错，因为 `var2` 被借用了
+
+
+    ////////////////////////////////////////////////
+    // 6. 内部可变性 //
+    ////////////////////////////////////////////////
+    // 外部可变性通过 mut 关键字声明
+    // 在编译器的眼里，值是只读的，但是在运行时，这个值可以得到可变借用，从而修改内部的数据
+    rc::test();
+
 }
